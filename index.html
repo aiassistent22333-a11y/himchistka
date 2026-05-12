@@ -547,11 +547,22 @@
         function copyAndRedirect() {
             const total = document.getElementById('final-price').innerText;
             const message = `Здравствуйте! Мой расчет: ${calcData.object} (${calcData.size}), загрязнение: ${calcData.stain}. Цена: ${total} руб. Хочу зафиксировать цену. Следом присылаю фото для подтверждения записи. Несете материальную ответственность?`;
-            const el = document.createElement('textarea'); el.value = message;
-            document.body.appendChild(el); el.select();
-            document.execCommand('copy'); document.body.removeChild(el);
+            
+            // Копирование через временный элемент (надежнее для WebView)
+            const el = document.createElement('textarea');
+            el.value = message;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+
             document.getElementById('copy-toast').style.display = 'block';
-            setTimeout(() => { window.open(PROJECT_CONFIG.avitoUrl, "_blank"); document.getElementById('copy-toast').style.display = 'none'; }, 1200);
+            
+            setTimeout(() => {
+                // Прямой переход на мобильных лучше делать через смену location
+                window.location.href = PROJECT_CONFIG.avitoUrl;
+                document.getElementById('copy-toast').style.display = 'none';
+            }, 1200);
         }
 
         function resetCalc() {
